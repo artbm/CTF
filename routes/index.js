@@ -1,3 +1,5 @@
+//11bf5b37-e0b8-42e0-8dcf-dc8c4aefc000 uuid
+
 const router = require("express-promise-router")();
 const axios = require('axios');
 
@@ -9,16 +11,13 @@ router.get('/', async function (req, res) {
 });
 
 router.post('/trusk/average', async function (req, res) {
-  //https://trusk-ctf.herokuapp.com/11bf5b37-e0b8-42e0-8dcf-dc8c4aefc000/webhook/avg
-  //console.log(req.headers['links'])
+  //https://trusk-ctf.herokuapp.com/uuid/webhook/avg
 
   let avg = average(req.body['idx'], req.body['value']);
-  axios.post('https://trusk-ctf.herokuapp.com/11bf5b37-e0b8-42e0-8dcf-dc8c4aefc000/webhook/avg', {
+  axios.post(getUrl(req.headers['links']), {
     response: avg,
   })
     .then((res) => {
-      console.log(`statusCode: ${res.statusCode}`);
-      console.log(res);
     })
     .catch((error) => {
       console.error(error);
@@ -27,16 +26,13 @@ router.post('/trusk/average', async function (req, res) {
 });
 
 router.post('/trusk/unique', async function (req, res) {
-  //https://trusk-ctf.herokuapp.com/11bf5b37-e0b8-42e0-8dcf-dc8c4aefc000/webhook/unique
-  //console.log(req.headers['links']);
+  //https://trusk-ctf.herokuapp.com/uuid/webhook/unique
 
   let unq = unique(req.body['idx'], req.body['value']);
-  axios.post('https://trusk-ctf.herokuapp.com/11bf5b37-e0b8-42e0-8dcf-dc8c4aefc000/webhook/unique', {
+  axios.post(getUrl(req.headers['links']), {
     response: unq,
   })
     .then((res) => {
-      console.log(`statusCode: ${res.statusCode}`);
-      console.log(res);
     })
     .catch((error) => {
       console.error(error);
@@ -88,6 +84,10 @@ function average(idx, value) {
     }
     return Math.round(avg / (numbers.length + value.length));
   }
+}
+
+function getUrl(reply_to) {
+  return reply_to.substring(1, reply_to.length - 17);
 }
 
 module.exports = router;
